@@ -5,6 +5,14 @@ from sqlalchemy import create_engine
 
 Base = declarative_base()
 
+class User(Base):
+    __tablename__ = 'user'
+
+
+    name =Column(String(80), nullable = False)
+    id = Column(Integer, primary_key = True)
+    email = Column(String(250), nullable = False)
+
 class Category(Base):
     __tablename__ = 'category'
 
@@ -45,14 +53,6 @@ class Item(Base):
            'price'         : self.price,
            'course'         : self.course,
        }
-
-class User(Base):
-    __tablename__ = 'user'
-
-
-    name =Column(String(80), nullable = False)
-    id = Column(Integer, primary_key = True)
-    email = Column(String(250), nullable = False)
 
 
 engine = create_engine('sqlite:///itemcatalog.db')

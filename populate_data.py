@@ -67,7 +67,7 @@ session.commit()
 
 
 #Build test category 2
-category1 = Category(name = "Test Category 3")
+category3 = Category(name = "Test Category 3")
 
 session.add(category3)
 session.commit()
