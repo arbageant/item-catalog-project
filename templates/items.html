@@ -1,0 +1,69 @@
+<html>
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+
+<body>
+	<div class = 'pane'>
+		<div class = 'header'>
+		<h1>{{ category.name }}</h1>
+	</div>
+
+	<a href = '{{url_for('newItem', category_id = category.id) }}'>Create New Item</a>
+
+
+<div class = 'flash'>
+		      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+            <li> <strong> {{ message }} </strong> </li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+</div>
+
+
+		{% for i in items %}
+  <div class = 'namePanel'>
+	   <span class = 'name'><p><b>{{i.name}}</b></p></span>
+
+	</div>
+
+
+
+	<div class = 'description'>
+		<p>{{i.description}}</p>
+	</div>
+
+
+
+	<div class = "editdeletepane">
+
+	<a href='{{url_for('editItem',category_id = category.id, item_id=i.id)}}' >Edit</a>
+	<a href='{{url_for('deleteItem',category_id = category.id, item_id=i.id)}}' >
+	Delete</a>
+	</div>
+
+
+
+
+		{% endfor %}
+
+
+
+
+
+</div>
+</div>
+<h3><a href='{{url_for('showCatalog')}}' >Return to Category List</a></h3>
+	</body>
+
+
+
+
+</html>

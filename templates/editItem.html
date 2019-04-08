@@ -1,0 +1,22 @@
+<html>
+<body>
+
+<h1>Edit Item</h1>
+
+<form action="{{url_for('editItem', category_id=category_id, item_id=item.id)}}"
+method = 'POST'>
+
+  <p>Name</p>
+    <input type = 'text' size='30' name='name', placeholder='{{item.name}}'>
+  <p>Description</p>
+    <input type = 'text' size='30' name='description', placeholder='{{item.description}}'>
+  </br>
+  </br>
+
+<input type='submit' value='Submit'>
+</form>
+
+<a href =  {{url_for('showItems',category_id=category_id)}}>Cancel</a>
+
+</body>
+</html>
