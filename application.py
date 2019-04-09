@@ -91,7 +91,16 @@ def showItems(category_id):
     items = session.query(Item).filter_by(category_id = category_id).all()
     return render_template('items.html', items = items, category = category)
 
-
+#Show an individual item
+@app.route('/catalog/<int:category_id>/items/<int:item_id>')
+def showOneItem(category_id, item_id):
+    #if 'username' not in login_session:
+        #return redirect('/login')
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    category = session.query(Category).filter_by(id = category_id).one()
+    item = session.query(Item).filter_by(id = item_id).one()
+    return render_template('oneItem.html', item = item, category = category)
 
 #Create a new item in a category
 @app.route('/catalog/<int:category_id>/items/new',methods=['GET','POST'])
