@@ -157,6 +157,37 @@ def deleteItem(category_id, item_id):
     else:
         return render_template('deleteItem.html', category_id = category_id, item_id = item_id, item = itemToDelete)
 
+#JSON APIs to view catalog information
+@app.route('/catalog/<int:category_id>/items/JSON')
+def itemsJSON(category_id):
+    #if 'username' not in login_session:
+        #return redirect('/login')
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    #category = session.query(Category).filter_by(id = category_id).one()
+    items = session.query(Item).filter_by(category_id = category_id).all()
+    return jsonify(Items=[i.serialize for i in items])
+
+
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/JSON')
+def itemJSON(category_id, item_id):
+    #if 'username' not in login_session:
+        #return redirect('/login')
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    #category = session.query(Category).filter_by(id = category_id).one()
+    item = session.query(Item).filter_by(id = item_id).one()
+    return jsonify(Item=item.serialize)
+
+@app.route('/catalog/JSON')
+def catalogJSON():
+    #if 'username' not in login_session:
+        #return redirect('/login')
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    categories = session.query(Category).all()
+    return jsonify(Categories= [c.serialize for c in categories])
+
 
 if __name__ == '__main__':
   app.secret_key = 'super_secret_key'
