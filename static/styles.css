@@ -34,11 +34,11 @@ a {
     text-decoration: none;
     color: #ffffcc;
     font-size: .75em;
-}
+5
 
 .pane {
     position: absolute;
-    left: 25%;
+    left: 20%;
     border: 2px solid;
     border-radius: 25px;
     padding: 5px;
@@ -58,12 +58,7 @@ a {
     float: left;
 }
 
-.description {}
-
-.price {
-    text-align: right;
-    width: 50%;
-    float: right;
+.description {
 }
 
 .editdeletepane {}

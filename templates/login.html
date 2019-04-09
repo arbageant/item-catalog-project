@@ -1,6 +1,7 @@
 <html>
 <head>
-
+<!-- I want to match this page with CSS, but I'm an HTML noob and I'm still
+working out the details -->
   <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -21,23 +22,13 @@
 
 
 <body>
+<h1>Please Use Your Google Account to Log In</h1>
+</br>
 
+<!-- GOOGLE SIGN IN BUTTON-->
+<!-- Note: I had to make my own button here. I should replace this With
+something more aesthetic when I have the time -->
 
-<!-- GOOGLE PLUS SIGN IN BUTTON-->
-
-<!--
-          <div id="signinButton">
-          <span class="g-signin"
-            data-scope="openid email"
-            data-clientid="322400149801-situohh2o1an1rftu6bolgni4nth0muh.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-          </span>
-        </div>
--->
         <button id="signinButton">Google Signin</button>
         <div id="result"></div>
 
@@ -72,7 +63,7 @@
           });
         </script>
 
-<!--END GOOGLE PLUS SIGN IN BUTTON -->
+<!--END GOOGLE SIGN IN BUTTON -->
 
   </body>
 

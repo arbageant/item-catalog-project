@@ -21,69 +21,69 @@ session = DBSession()
 
 
 #Build test category 1
-category1 = Category(name = "Test Category 1")
+category1 = Category(name = "Test Category 1", user_id = 1)
 
 session.add(category1)
 session.commit()
 
 
-item1 = Item(name = "Test Item 1", description = "This is a test item for category 1", category = category1)
+item1 = Item(name = "Test Item 1", description = "This is a test item for category 1", category = category1, user_id = 1)
 
 session.add(item1)
 session.commit()
 
-item2 = Item(name = "Test Item 2", description = "This is a test item for category 1", category = category1)
+item2 = Item(name = "Test Item 2", description = "This is a test item for category 1", category = category1, user_id = 1)
 
 session.add(item2)
 session.commit()
 
-item3 = Item(name = "Test Item 3", description = "This is a test item for category 1", category = category1)
+item3 = Item(name = "Test Item 3", description = "This is a test item for category 1", category = category1, user_id = 1)
 
 session.add(item3)
 session.commit()
 
 
 #Build test category 2
-category2 = Category(name = "Test Category 2")
+category2 = Category(name = "Test Category 2", user_id = 1)
 
 session.add(category2)
 session.commit()
 
 
-item1 = Item(name = "Test Item 1", description = "This is a test item for category 2", category = category2)
+item1 = Item(name = "Test Item 1", description = "This is a test item for category 2", category = category2, user_id = 1)
 
 session.add(item1)
 session.commit()
 
-item2 = Item(name = "Test Item 2", description = "This is a test item for category 2", category = category2)
+item2 = Item(name = "Test Item 2", description = "This is a test item for category 2", category = category2, user_id = 1)
 
 session.add(item2)
 session.commit()
 
-item3 = Item(name = "Test Item 3", description = "This is a test item for category 2", category = category2)
+item3 = Item(name = "Test Item 3", description = "This is a test item for category 2", category = category2, user_id = 1)
 
 session.add(item3)
 session.commit()
 
 
 #Build test category 2
-category3 = Category(name = "Test Category 3")
+category3 = Category(name = "Test Category 3", user_id = 2)
 
 session.add(category3)
 session.commit()
 
 
-item1 = Item(name = "Test Item 1", description = "This is a test item for category 3", category = category3)
+item1 = Item(name = "Test Item 1", description = "This is a test item for category 3", category = category3, user_id = 2)
 
 session.add(item1)
 session.commit()
 
-item2 = Item(name = "Test Item 2", description = "This is a test item for category 3", category = category3)
+item2 = Item(name = "Test Item 2", description = "This is a test item for category 3", category = category3, user_id = 2)
 
 session.add(item2)
 session.commit()
 
-item3 = Item(name = "Test Item 3", description = "This is a test item for category 3", category = category3)
+item3 = Item(name = "Test Item 3", description = "This is a test item for category 3", category = category3, user_id = 2)
 
 session.add(item3)
 session.commit()

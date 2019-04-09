@@ -15,11 +15,13 @@ from flask import make_response
 
 app = Flask(__name__)
 
+# Load the client secrets file I downloaded from Google OAuth
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Udacity Item Catalog"
 
 #Connect to Database and create database session
+#Note that we have to bind the session separately in every method
 engine = create_engine('sqlite:///itemcatalog.db')
 Base.metadata.bind = engine
 
@@ -98,6 +100,13 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # check if a user exists, if not add user to User table
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
+    # send a login in message while redirecting
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -109,6 +118,7 @@ def gconnect():
     print "done!"
     return output
 
+# disconnect a user that logs out
 @app.route('/gdisconnect')
 def gdisconnect():
     access_token = login_session.get('access_token')
@@ -158,12 +168,13 @@ def showCatalog():
 #Create a new category
 @app.route('/catalog/new/', methods=['GET','POST'])
 def newCategory():
+    # users need to be logged in to do CUD operations
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
         DBSession = sessionmaker(bind=engine)
         session = DBSession()
-        newCategory = Category(name = request.form['name'])
+        newCategory = Category(name = request.form['name'], user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
@@ -179,6 +190,9 @@ def editCategory(category_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     editedCategory = session.query(Category).filter_by(id = category_id).one()
+    # make sure users can only edit their own categories/items
+    if editedCategory.user_id != login_session['user_id']:
+        return "You are not authorized to alter this category."
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -198,6 +212,8 @@ def deleteCategory(category_id):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
     categoryToDelete = session.query(Category).filter_by(id = category_id).one()
+    if categoryToDelete.user_id != login_session['user_id']:
+        return "You are not authorized to alter this category."
     if request.method == 'POST':
         session.delete(categoryToDelete)
         session.commit()
@@ -219,6 +235,7 @@ def showItems(category_id):
     return render_template('items.html', items = items, category = category)
 
 #Show an individual item
+#This is not used in current build, as there is no HTML template yet
 @app.route('/catalog/<int:category_id>/items/<int:item_id>')
 def showOneItem(category_id, item_id):
     #if 'username' not in login_session:
@@ -238,7 +255,7 @@ def newItem(category_id):
     session = DBSession()
     category = session.query(Category).filter_by(id = category_id).one()
     if request.method == 'POST':
-        newItem = Item(name = request.form['name'], description = request.form['description'], category_id = category_id)
+        newItem = Item(name = request.form['name'], description = request.form['description'], category_id = category_id, user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash('New Item %s Successfully Created' % (newItem.name))
@@ -255,6 +272,8 @@ def editItem(category_id, item_id):
     session = DBSession()
     editedItem = session.query(Item).filter_by(id = item_id).one()
     category = session.query(Category).filter_by(id = category_id).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "You are not authorized to alter this item."
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -276,6 +295,8 @@ def deleteItem(category_id, item_id):
     session = DBSession()
     itemToDelete = session.query(Item).filter_by(id = item_id).one()
     category = session.query(Category).filter_by(id = category_id).one()
+    if itemToDelete.user_id != login_session['user_id']:
+        return "You are not authorized to alter this category."
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -283,6 +304,7 @@ def deleteItem(category_id, item_id):
         return redirect(url_for('showItems', category_id = category_id))
     else:
         return render_template('deleteItem.html', category_id = category_id, item_id = item_id, item = itemToDelete)
+
 
 #JSON APIs to view catalog information
 @app.route('/catalog/<int:category_id>/items/JSON')
@@ -314,6 +336,35 @@ def catalogJSON():
     session = DBSession()
     categories = session.query(Category).all()
     return jsonify(Categories= [c.serialize for c in categories])
+
+
+#Methods to handle user creation and validation
+#NOTE: We're intentionally ignoring the 'picture' field
+def createUser(login_session):
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    newUser = User(name = login_session['username'], email =
+        login_session['email'])
+    session.add(newUser)
+    session.commit()
+    user = session.query(User).filter_by(email =
+        login_session['email']).one()
+    return user.id
+
+def getUserInfor(user_id):
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    user = session.query(User).filter_by(id = user_id).one()
+    return user
+
+def getUserID(email):
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+    try:
+        user = session.query(User).filter_by(email = email).one()
+        return user.id
+    except:
+        return None
 
 
 if __name__ == '__main__':
